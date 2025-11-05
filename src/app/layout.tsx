@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { NavAuth } from "@/components/NavAuth";
+import { ClientRoot } from "@/components/ClientRoot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +28,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-neutral-950 text-neutral-100`}
       >
-        {children}
+        <AuthProvider>
+          <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4">
+          <header className="sticky top-0 z-10 bg-neutral-950/80 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/60">
+            <nav className="flex items-center justify-between py-5">
+              <a href="/" className="text-2xl font-bold tracking-tight">FitTrack</a>
+              <div className="flex items-center gap-6 text-sm">
+                <a className="opacity-90 hover:opacity-100" href="/">Dashboard</a>
+                <a className="opacity-90 hover:opacity-100" href="/profile">Profile</a>
+                <a className="opacity-90 hover:opacity-100" href="/diary">Diary</a>
+                <a className="opacity-90 hover:opacity-100" href="/workouts">Workouts</a>
+                <a className="opacity-90 hover:opacity-100" href="/kitchen">Your Kitchen</a>
+                <a className="opacity-90 hover:opacity-100" href="/settings">Settings</a>
+                <NavAuth />
+              </div>
+            </nav>
+          </header>
+          <main className="flex-1 py-6"><ClientRoot>{children}</ClientRoot></main>
+          <footer className="py-8 text-center text-xs opacity-60">© {new Date().getFullYear()} FitTrack</footer>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
