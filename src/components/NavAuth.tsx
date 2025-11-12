@@ -1,12 +1,15 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAppStore } from "@/store/appStore";
+import { DemoForm } from "./DemoForm";
 
 export function NavAuth() {
   const { user, logout } = useAuth();
   const profile = useAppStore((s) => s.profile);
   const router = useRouter();
+  const [showDemoForm, setShowDemoForm] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -15,9 +18,15 @@ export function NavAuth() {
 
   if (!user) {
     return (
-      <a className="opacity-90 hover:opacity-100" href="/login">
-        Login
-      </a>
+      <>
+        <button
+          onClick={() => setShowDemoForm(true)}
+          className="opacity-90 hover:opacity-100"
+        >
+          Book a Demo
+        </button>
+        {showDemoForm && <DemoForm onClose={() => setShowDemoForm(false)} />}
+      </>
     );
   }
 

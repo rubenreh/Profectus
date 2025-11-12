@@ -1,10 +1,12 @@
 "use client";
 import { useMemo } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { useAppStore, kgToLbs } from "@/store/appStore";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { formatDate } from "@/lib/dateUtils";
+import { LandingPage } from "@/components/LandingPage";
 
-export default function Home() {
+function Dashboard() {
   const profile = useAppStore((s) => s.profile);
   const targets = useAppStore((s) => s.targets);
   const diary = useAppStore((s) => s.diary);
@@ -178,6 +180,24 @@ export default function Home() {
       </div>
     </div>
   );
+}
+
+export default function Home() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-sm text-neutral-400">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LandingPage />;
+  }
+
+  return <Dashboard />;
 }
 
 function Card({ title, value, target }: { title: string; value: string; target?: number }) {

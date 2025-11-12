@@ -114,4 +114,19 @@ export interface AppStateSnapshot {
 	selectedWorkoutSplit?: string; // ID of selected workout split
 }
 
+export interface ChatMessage {
+	id: string;
+	role: "user" | "assistant";
+	content: string;
+	timestamp: string; // ISO date-time
+}
+
+export interface ChatConversation {
+	id: string;
+	userId: string;
+	messages: ChatMessage[];
+	createdAt: string; // ISO date-time
+	updatedAt: string; // ISO date-time
+}
+
 

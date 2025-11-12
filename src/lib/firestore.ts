@@ -12,7 +12,7 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { UserProfile, MacroTargets, WeightEntry, FoodItem, DiaryEntry, WorkoutSession } from "./types";
+import type { UserProfile, MacroTargets, WeightEntry, FoodItem, DiaryEntry, WorkoutSession, ChatMessage, ChatConversation } from "./types";
 
 const COLLECTIONS = {
   profile: "profile",
@@ -21,6 +21,7 @@ const COLLECTIONS = {
   foods: "foods",
   diary: "diary",
   workouts: "workouts",
+  chatConversations: "chatConversations",
 } as const;
 
 export async function syncProfileToFirestore(userId: string, profile: UserProfile | undefined) {
@@ -307,5 +308,46 @@ export function subscribeToUserData(
   return () => {
     unsubscribes.forEach((unsub) => unsub());
   };
+}
+
+// Chat conversation functions
+export async function loadChatConversationFromFirestore(userId: string): Promise<ChatConversation | undefined> {
+  if (!userId) return undefined;
+  const conversationsRef = collection(db, COLLECTIONS.chatConversations);
+  const q = query(conversationsRef);
+  const snapshot = await getDocs(q);
+  const userConversation = snapshot.docs.find((d) => d.data().userId === userId);
+  
+  if (!userConversation) return undefined;
+  
+  const data = userConversation.data();
+  return {
+    id: userConversation.id,
+    userId: data.userId,
+    messages: data.messages || [],
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  } as ChatConversation;
+}
+
+export async function syncChatConversationToFirestore(userId: string, conversation: ChatConversation) {
+  if (!userId) return;
+  
+  const conversationsRef = collection(db, COLLECTIONS.chatConversations);
+  const q = query(conversationsRef);
+  const snapshot = await getDocs(q);
+  const existingConversation = snapshot.docs.find((d) => d.data().userId === userId);
+  
+  if (existingConversation) {
+    await updateDoc(existingConversation.ref, {
+      messages: conversation.messages,
+      updatedAt: conversation.updatedAt,
+    });
+  } else {
+    await setDoc(doc(db, COLLECTIONS.chatConversations, conversation.id), {
+      ...conversation,
+      userId,
+    });
+  }
 }
 
