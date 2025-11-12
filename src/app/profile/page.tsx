@@ -18,15 +18,25 @@ export default function ProfilePage() {
     const weightKg = profile?.weightKg ?? defaultWeight;
     const goalWeightKg = profile?.goalWeightKg ?? weightKg;
     
+    const heightValue: number = unit === "imperial" 
+      ? parseFloat(cmToInches(heightCm).toFixed(1)) 
+      : heightCm;
+    const weightValue: number = unit === "imperial" 
+      ? parseFloat(kgToLbs(weightKg).toFixed(1)) 
+      : weightKg;
+    const goalWeightValue: number = unit === "imperial" 
+      ? parseFloat(kgToLbs(goalWeightKg).toFixed(1)) 
+      : goalWeightKg;
+    
     return {
       name: profile?.name ?? "",
-      height: unit === "imperial" ? parseFloat(cmToInches(heightCm).toFixed(1)) : Number(heightCm),
-      weight: unit === "imperial" ? parseFloat(kgToLbs(weightKg).toFixed(1)) : Number(weightKg),
-      age: Number(profile?.age ?? defaultAge),
+      height: heightValue,
+      weight: weightValue,
+      age: profile?.age ?? defaultAge,
       gender: (profile?.gender ?? "male") as Gender,
       activityLevel: (profile?.activityLevel ?? "moderate") as ActivityLevel,
       goal: (profile?.goal ?? "maintain") as GoalType,
-      goalWeight: unit === "imperial" ? parseFloat(kgToLbs(goalWeightKg).toFixed(1)) : Number(goalWeightKg),
+      goalWeight: goalWeightValue,
     };
   }, [profile, unit]);
   
@@ -141,9 +151,21 @@ export default function ProfilePage() {
         <Select label="Units" value={unit} onChange={(v) => {
           const nextUnit = v as "metric" | "imperial";
           // Convert existing values to the next unit for display
-          const height = nextUnit === "imperial" ? parseFloat(cmToInches(form.height).toFixed(1)) : Math.round(inchesToCm(form.height));
-          const weight = nextUnit === "imperial" ? parseFloat(kgToLbs(form.weight).toFixed(1)) : parseFloat(lbsToKg(form.weight).toFixed(1));
-          const goalWeight = nextUnit === "imperial" ? parseFloat(kgToLbs(form.goalWeight).toFixed(1)) : parseFloat(lbsToKg(form.goalWeight).toFixed(1));
+          // If switching from metric to imperial, convert cm to inches
+          // If switching from imperial to metric, convert inches to cm
+          const currentHeightCm = unit === "imperial" ? inchesToCm(form.height) : form.height;
+          const currentWeightKg = unit === "imperial" ? lbsToKg(form.weight) : form.weight;
+          const currentGoalWeightKg = unit === "imperial" ? lbsToKg(form.goalWeight) : form.goalWeight;
+          
+          const height: number = nextUnit === "imperial" 
+            ? parseFloat(cmToInches(currentHeightCm).toFixed(1)) 
+            : Math.round(currentHeightCm);
+          const weight: number = nextUnit === "imperial" 
+            ? parseFloat(kgToLbs(currentWeightKg).toFixed(1)) 
+            : parseFloat(currentWeightKg.toFixed(1));
+          const goalWeight: number = nextUnit === "imperial" 
+            ? parseFloat(kgToLbs(currentGoalWeightKg).toFixed(1)) 
+            : parseFloat(currentGoalWeightKg.toFixed(1));
           setUnit(nextUnit);
           setForm({ ...form, height, weight, goalWeight });
         }} options={["metric","imperial"]} />
