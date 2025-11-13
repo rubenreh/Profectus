@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let cachedOpenAIClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI | null {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+
+  if (!cachedOpenAIClient) {
+    cachedOpenAIClient = new OpenAI({ apiKey });
+  }
+
+  return cachedOpenAIClient;
+}
 
 const SYSTEM_PROMPT = `You are "Your Personal Trainer", an elite AI fitness and nutrition coach with access to the most comprehensive research database on physical health. Your role is to provide scientifically-backed, evidence-based fitness and nutrition guidance.
 
@@ -56,10 +67,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    const openai = getOpenAIClient();
+
+    if (!openai) {
       return NextResponse.json(
         { error: "OpenAI API key not configured" },
-        { status: 500 }
+        { status: 503 }
       );
     }
 
@@ -95,6 +108,19 @@ export async function POST(req: NextRequest) {
     if (error.response) {
       console.error("OpenAI API error:", error.response.status, error.response.data);
     }
+
+    const status = error.status || error.response?.status;
+
+    if (status === 429) {
+      return NextResponse.json(
+        {
+          error:
+            "Our AI trainer hit the current OpenAI usage limit. Please try again shortly, or check your OpenAI plan and billing details.",
+        },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json(
       { 
         error: error.message || "Failed to get AI response",
