@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 
 interface AuthContextType {
   user: User | null;
@@ -18,22 +18,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-    return unsubscribe;
+    let mounted = true;
+    let unsubscribe: (() => void) | null = null;
+    
+    try {
+      const auth = getFirebaseAuth();
+      if (!auth) {
+        setLoading(false);
+        return;
+      }
+
+      unsubscribe = onAuthStateChanged(
+        auth,
+        (firebaseUser) => {
+          if (mounted) {
+            setUser(firebaseUser);
+            setLoading(false);
+          }
+        },
+        (error) => {
+          console.error("Auth state error:", error);
+          if (mounted) {
+            setLoading(false);
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Firebase auth initialization error:", error);
+      if (mounted) {
+        setLoading(false);
+      }
+    }
+
+    return () => {
+      mounted = false;
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      throw new Error("Firebase is not configured.");
+    }
     await signInWithEmailAndPassword(auth, email, password);
   };
 
   const signup = async (email: string, password: string) => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      throw new Error("Firebase is not configured.");
+    }
     await createUserWithEmailAndPassword(auth, email, password);
   };
 
   const logout = async () => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      throw new Error("Firebase is not configured.");
+    }
     await signOut(auth);
   };
 
