@@ -51,7 +51,7 @@ service cloud.firestore {
 2. Click **Project settings**
 3. Scroll down to **Your apps** section
 4. Click the **Web** icon (`</>`) to add a web app if you haven't already
-5. Register your app with a nickname (e.g., "FitTrack Web")
+5. Register your app with a nickname (e.g., "Profectus Web")
 6. Copy the Firebase config values from the SDK setup section
 
 ## Step 5: Add Environment Variables

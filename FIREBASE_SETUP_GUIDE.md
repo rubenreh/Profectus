@@ -80,7 +80,7 @@ Follow these instructions exactly to set up Firebase for your fitness app.
 
 ### 4.3 Register Your Web App
 1. A popup will appear asking you to register your app
-2. **App nickname**: Enter something like "FitTrack Web" or "Fitness App"
+2. **App nickname**: Enter something like "Profectus Web" or "Fitness App"
 3. You can leave "Also set up Firebase Hosting" **unchecked** (we don't need that)
 4. Click **"Register app"**
 

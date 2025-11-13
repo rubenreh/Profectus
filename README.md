@@ -1,6 +1,6 @@
-# FitTrack - The Most Researched Physical Health Platform
+# Profectus - The Most Researched Physical Health Platform
 
-FitTrack is an AI-powered fitness and health coaching platform that provides evidence-based guidance using the world's most comprehensive research database. Get personalized fitness, nutrition, and health recommendations backed by scientific research.
+Profectus is an AI-powered fitness and health coaching platform that provides evidence-based guidance using the world's most comprehensive research database. Get personalized fitness, nutrition, and health recommendations backed by scientific research.
 
 ## Features
 

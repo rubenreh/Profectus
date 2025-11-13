@@ -15,8 +15,8 @@ export function DemoForm({ onClose }: { onClose: () => void }) {
 
   if (state.succeeded) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+      <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
+        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl mt-20 mb-8">
           <div className="flex flex-col items-center text-center">
             <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mb-4">
               <CheckCircle2 className="w-8 h-8 text-emerald-400" />
@@ -34,8 +34,13 @@ export function DemoForm({ onClose }: { onClose: () => void }) {
   const submitting = state.submitting;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
-      <div className="relative w-full max-w-md rounded-2xl border border-neutral-800 bg-neutral-900 p-8 shadow-2xl animate-fadeIn">
+    <div 
+      className="fixed inset-0 z-[100] flex items-start justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto" 
+      role="dialog" 
+      aria-modal="true"
+      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}
+    >
+      <div className="relative w-full max-w-md rounded-2xl border border-neutral-800 bg-neutral-900 p-8 shadow-2xl animate-fadeIn mt-20 mb-8">
         <button
           onClick={onClose}
           className="absolute right-4 top-4 z-10 rounded-lg p-2 text-neutral-400 transition hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
@@ -51,7 +56,7 @@ export function DemoForm({ onClose }: { onClose: () => void }) {
             Book a Demo
           </h2>
           <p className="text-sm text-neutral-400 mt-2">
-            Experience how FitTrack orchestrates AI-driven coaching. Share your goals and we will schedule a tailored walkthrough.
+            Experience how Profectus orchestrates AI-driven coaching. Share your goals and we will schedule a tailored walkthrough.
           </p>
         </div>
 

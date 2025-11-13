@@ -211,7 +211,7 @@ export function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.35 }}
             >
-              FitTrack fuses a proprietary research ingestion engine with a low-latency coaching model.
+              Profectus fuses a proprietary research ingestion engine with a low-latency coaching model.
               Every recommendation is cited, quantified, and adapted to your physiology in real time.
             </motion.p>
 
@@ -636,7 +636,7 @@ export function LandingPage() {
               Build your health strategy on defensible science.
             </h2>
             <p className="mt-6 text-base text-neutral-300 sm:text-lg">
-              FitTrack is an always-on performance lab that translates research into results you can measure.
+              Profectus is an always-on performance lab that translates research into results you can measure.
               Book a private session to see how we can augment your coaching, team, or personal regimen.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
